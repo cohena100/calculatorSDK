@@ -10,6 +10,12 @@
 		0402027F1D3F5E02001702C3 /* CalculatorSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 0402027E1D3F5E02001702C3 /* CalculatorSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		040202861D3F5E02001702C3 /* CalculatorSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0402027B1D3F5E02001702C3 /* CalculatorSDK.framework */; };
 		0402028B1D3F5E02001702C3 /* CalculatorSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402028A1D3F5E02001702C3 /* CalculatorSDKTests.swift */; };
+		040202961D3F5E81001702C3 /* CalculatorCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040202951D3F5E81001702C3 /* CalculatorCommands.swift */; };
+		040202971D3F5E81001702C3 /* CalculatorCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040202951D3F5E81001702C3 /* CalculatorCommands.swift */; };
+		040202991D3F5EF7001702C3 /* ICalculatorProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040202981D3F5EF7001702C3 /* ICalculatorProxy.swift */; };
+		0402029A1D3F5EF7001702C3 /* ICalculatorProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040202981D3F5EF7001702C3 /* ICalculatorProxy.swift */; };
+		0402029C1D3F5F18001702C3 /* CalculatorProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402029B1D3F5F18001702C3 /* CalculatorProxy.swift */; };
+		0402029E1D3F8C2C001702C3 /* CalculatorProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0402029B1D3F5F18001702C3 /* CalculatorProxy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +35,9 @@
 		040202851D3F5E02001702C3 /* CalculatorSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalculatorSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0402028A1D3F5E02001702C3 /* CalculatorSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorSDKTests.swift; sourceTree = "<group>"; };
 		0402028C1D3F5E02001702C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		040202951D3F5E81001702C3 /* CalculatorCommands.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorCommands.swift; sourceTree = "<group>"; };
+		040202981D3F5EF7001702C3 /* ICalculatorProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICalculatorProxy.swift; sourceTree = "<group>"; };
+		0402029B1D3F5F18001702C3 /* CalculatorProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorProxy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +82,9 @@
 			children = (
 				0402027E1D3F5E02001702C3 /* CalculatorSDK.h */,
 				040202801D3F5E02001702C3 /* Info.plist */,
+				040202951D3F5E81001702C3 /* CalculatorCommands.swift */,
+				040202981D3F5EF7001702C3 /* ICalculatorProxy.swift */,
+				0402029B1D3F5F18001702C3 /* CalculatorProxy.swift */,
 			);
 			path = CalculatorSDK;
 			sourceTree = "<group>";
@@ -194,6 +206,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0402029C1D3F5F18001702C3 /* CalculatorProxy.swift in Sources */,
+				040202991D3F5EF7001702C3 /* ICalculatorProxy.swift in Sources */,
+				040202961D3F5E81001702C3 /* CalculatorCommands.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +216,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0402029E1D3F8C2C001702C3 /* CalculatorProxy.swift in Sources */,
+				0402029A1D3F5EF7001702C3 /* ICalculatorProxy.swift in Sources */,
 				0402028B1D3F5E02001702C3 /* CalculatorSDKTests.swift in Sources */,
+				040202971D3F5E81001702C3 /* CalculatorCommands.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,6 +328,7 @@
 		040202901D3F5E02001702C3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -320,12 +339,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.home.CalculatorSDK;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		040202911D3F5E02001702C3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;

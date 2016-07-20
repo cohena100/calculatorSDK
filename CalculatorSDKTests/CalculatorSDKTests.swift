@@ -11,25 +11,57 @@ import XCTest
 
 class CalculatorSDKTests: XCTestCase {
     
+    var commands: CalculatorCommands!
+    var proxy: ICalculatorProxy!
+    
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        proxy = CalculatorProxy()
+        commands = CalculatorCommands(calculatorProxy: proxy)
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        commands = nil
+        proxy = nil
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testPerformPlus_validOperationAndNumbers_OK() {
+        var result = try! commands.perform("+", on: "5")
+        XCTAssert(result == 5)
+        result = try! commands.perform("+", on: "5")
+        XCTAssert(result == 10)
     }
     
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
+    func testPerformEquals_validOperationAndNumbers_OK() {
+        var result = try! commands.equals(on: "5")
+        XCTAssert(result == 5)
+        result = try! commands.equals(on: "5")
+        XCTAssert(result == 5)
+    }
+    
+    func testPerformPlusAndEquals_validOperationAndNumbers_OK() {
+        var result = try! commands.perform("+", on: "5")
+        XCTAssert(result == 5)
+        result = try! commands.equals(on: "5")
+        XCTAssert(result == 10)
+    }
+    
+    func testPerformPlus_invalidOperationButValidNumber_Throws() {
+        XCTAssertThrowsError(try commands.perform("<", on: "5")) { (error) in
+            XCTAssertEqual(error as? CalculatorCommands.Error, CalculatorCommands.Error.InvalidOperation)
+        }
+    }
+    
+    func testPerformPlus_validOperationButinvalidNumber_Throws() {
+        XCTAssertThrowsError(try commands.perform("+", on: "n")) { (error) in
+            XCTAssertEqual(error as? CalculatorCommands.Error, CalculatorCommands.Error.InvalidNumber)
+        }
+    }
+    
+    func testPerformEquals_invalidNumber_Throws() {
+        XCTAssertThrowsError(try commands.equals(on: "d")) { (error) in
+            XCTAssertEqual(error as? CalculatorCommands.Error, CalculatorCommands.Error.InvalidNumber)
         }
     }
     
