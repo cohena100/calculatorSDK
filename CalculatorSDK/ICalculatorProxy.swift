@@ -8,24 +8,11 @@
 
 import Foundation
 
-public enum CalculatorProxyOperation: String {
-    
-    case plus = "+"
-    
-    var perform: (Double, Double) -> Double {
-        get {
-            switch self {
-            case .plus:
-                return { $0 + $1 }
-            }
-        }
-    }
-
-}
-
 public protocol ICalculatorProxy: class {
     
-    func perform(operation: CalculatorProxyOperation, on number: Double) -> Double
-    func equals(on number: Double) -> Double
-
+    func perform(letfNumber: Double, _ operation: (Double, Double) -> Double, _ rightNumber: Double) -> Double
+    func percent(number: Double) -> Double
+    func plusMinus(number: Double) -> Double
+    func allClear() -> Double
+    
 }

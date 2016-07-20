@@ -11,29 +11,27 @@ import Foundation
 public class CalculatorProxy {
     
     var sum: Double = 0
-    var operation: CalculatorProxyOperation?
     
 }
 
 extension CalculatorProxy: ICalculatorProxy {
     
-    public func perform(operation: CalculatorProxyOperation, on number: Double) -> Double {
-        guard let op = self.operation else {
-            self.operation = operation
-            sum = number
-            return sum
-        }
-        sum = op.perform(sum, number)
-        self.operation = operation
+    public func perform(letfNumber: Double, _ operation: (Double, Double) -> Double, _ rightNumber: Double) -> Double {
+        sum = operation(letfNumber, rightNumber)
         return sum
     }
     
-    public func equals(on number: Double) -> Double {
-        guard let op = self.operation else {
-            sum = number
-            return sum
-        }
-        sum = op.perform(sum, number)
-        return sum
+    public func percent(number: Double) -> Double {
+        return number / 100
     }
+    
+    public func plusMinus(number: Double) -> Double {
+        return -number
+    }
+    
+    public func allClear() -> Double {
+        sum = 0
+        return 0
+    }
+    
 }
