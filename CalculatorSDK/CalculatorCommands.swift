@@ -114,6 +114,24 @@ public class CalculatorCommands {
         return performBinaryOperation()
     }
 
+    func percent() -> String {
+        if rightNumber != nil {
+            rightNumber = format(calculatorProxy.percent(Double(rightNumber!)!))
+            return rightNumber!
+        }
+        leftNumber = format(calculatorProxy.percent(Double(leftNumber)!))
+        return leftNumber
+    }
+    
+    func plusMinus() -> String {
+        if rightNumber != nil {
+            rightNumber = format(calculatorProxy.plusMinus(Double(rightNumber!)!))
+            return rightNumber!
+        }
+        leftNumber = format(calculatorProxy.plusMinus(Double(leftNumber)!))
+        return leftNumber
+    }
+
     // MARK: - Private
     
     private func performBinaryOperation(keepOperation keepOperation: Bool = false) -> String {
@@ -121,14 +139,18 @@ public class CalculatorCommands {
             abort()
         }
         let result = calculatorProxy.perform(ln, op.performer, rn)
-        if result == Double(Int(result)) {
-            self.leftNumber = String(Int(result))
-        } else {
-            self.leftNumber = String(result)
-        }
+        self.leftNumber = format(result)
         self.operation = keepOperation ? self.operation : nil
         self.rightNumber = nil
         return leftNumber
+    }
+    
+    private func format(number: Double) -> String {
+        if number == Double(Int(number)) {
+            return String(Int(number))
+        } else {
+            return String(number)
+        }
     }
     
 }

@@ -11,6 +11,9 @@ import XCTest
 
 class CalculatorSDKTests: XCTestCase {
     
+    static let minusTen = "-10"
+    static let tenPercent = "0.1"
+    static let zero = "0"
     static let one = "1"
     static let two = "2"
     static let five = "5"
@@ -102,6 +105,26 @@ class CalculatorSDKTests: XCTestCase {
         XCTAssert(result == CalculatorSDKTests.two)
         result = commands.equals()
         XCTAssert(result == CalculatorSDKTests.ten)
+    }
+    
+    func testPercent_validOperationAndNumbers_OK() {
+        var result = try! commands.numberChanged(CalculatorSDKTests.ten)
+        result = commands.percent()
+        XCTAssert(result == CalculatorSDKTests.tenPercent)
+        try! commands.perform(CalculatorSDKTests.multiplyOp)
+        try! commands.numberChanged(CalculatorSDKTests.ten)
+        result = commands.equals()
+        XCTAssert(result == CalculatorSDKTests.one)
+    }
+    
+    func testPlusMinus_validOperationAndNumbers_OK() {
+        var result = try! commands.numberChanged(CalculatorSDKTests.ten)
+        result = commands.plusMinus()
+        XCTAssert(result == CalculatorSDKTests.minusTen)
+        try! commands.perform(CalculatorSDKTests.plusOp)
+        try! commands.numberChanged(CalculatorSDKTests.ten)
+        result = commands.equals()
+        XCTAssert(result == CalculatorSDKTests.zero)
     }
     
 }
