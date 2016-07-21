@@ -16,7 +16,10 @@ class CalculatorSDKTests: XCTestCase {
     static let five = "5"
     static let seven = "7"
     static let ten = "10"
+    static let fifteen = "15"
+    static let twenty = "20"
     static let plusOp = "+"
+    static let minusOp = "-"
     static let multiplyOp = "*"
     static let divideOp = "/"
     static let errorOp = "<"
@@ -47,11 +50,25 @@ class CalculatorSDKTests: XCTestCase {
         XCTAssert(result == CalculatorSDKTests.seven)
     }
     
-    func testPerformPlusAndEquals_validOperationAndNumbers_OK() {
+    func testRepeatNumber_repeatingNumber_operationDoneRepeatedly() {
         var result = try! commands.numberChanged(CalculatorSDKTests.five)
-        result = try! commands.perform(CalculatorSDKTests.plusOp)
-        XCTAssert(result == CalculatorSDKTests.five)
+        try! commands.perform(CalculatorSDKTests.plusOp)
         result = commands.equals()
+        XCTAssert(result == CalculatorSDKTests.ten)
+        result = commands.equals()
+        XCTAssert(result == CalculatorSDKTests.fifteen)
+        result = commands.equals()
+        XCTAssert(result == CalculatorSDKTests.twenty)
+    }
+    
+    func testRepeatNumber_repeatingNumberAndStop_operationDoneRepeatedlyAndStopped() {
+        try! commands.numberChanged(CalculatorSDKTests.five)
+        try! commands.perform(CalculatorSDKTests.plusOp)
+        commands.equals()
+        commands.equals()
+        try! commands.perform(CalculatorSDKTests.minusOp)
+        try! commands.numberChanged(CalculatorSDKTests.five)
+        let result = commands.equals()
         XCTAssert(result == CalculatorSDKTests.ten)
     }
     
@@ -68,19 +85,19 @@ class CalculatorSDKTests: XCTestCase {
     }
     
     func testPerformDevideAndEquals_validOperationAndNumbers_OK() {
-        var result = try! commands.numberChanged(CalculatorSDKTests.ten)
-        result = try! commands.perform(CalculatorSDKTests.divideOp)
-        result = commands.equals()
+        try! commands.numberChanged(CalculatorSDKTests.ten)
+        try! commands.perform(CalculatorSDKTests.divideOp)
+        let result = commands.equals()
         XCTAssert(result == CalculatorSDKTests.one)
     }
     
     func testClear_validOperationAndNumbers_OK() {
-        var result = try! commands.numberChanged(CalculatorSDKTests.five)
-        result = try! commands.perform(CalculatorSDKTests.divideOp)
+        try! commands.numberChanged(CalculatorSDKTests.five)
+        var result = try! commands.perform(CalculatorSDKTests.divideOp)
         XCTAssert(result == CalculatorSDKTests.five)
         result = commands.clear()
         XCTAssert(result == CalculatorSDKTests.five)
-        result = try! commands.perform(CalculatorSDKTests.multiplyOp)
+        try! commands.perform(CalculatorSDKTests.multiplyOp)
         result = try! commands.numberChanged(CalculatorSDKTests.two)
         XCTAssert(result == CalculatorSDKTests.two)
         result = commands.equals()

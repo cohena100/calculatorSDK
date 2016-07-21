@@ -10,14 +10,11 @@ import Foundation
 
 public class CalculatorCommands {
     
-    static let zero = "0"
-    
     public enum Error: ErrorType {
         case InvalidOperation
         case InvalidNumber
     }
-    
-    public enum CalculatorProxyOperation: String {
+    public enum Operation: String {
         
         case plus = "+"
         case minus = "-"
@@ -41,11 +38,12 @@ public class CalculatorCommands {
         
     }
     
+    static let zero = "0"
     let calculatorProxy: ICalculatorProxy
-    
     var leftNumber: String = CalculatorCommands.zero
     var operation: String?
     var rightNumber: String?
+    var repeatNumber: String?
     
     public init(calculatorProxy: ICalculatorProxy) {
         self.calculatorProxy = calculatorProxy
@@ -55,6 +53,7 @@ public class CalculatorCommands {
         guard let _ = Double(number) else {
             throw Error.InvalidNumber
         }
+        repeatNumber = nil
         if operation == nil {
             leftNumber = number
             return leftNumber
@@ -64,7 +63,7 @@ public class CalculatorCommands {
     }
     
     public func perform(operation: String) throws -> String {
-        guard let _ = CalculatorProxyOperation(rawValue: operation) else {
+        guard let _ = Operation(rawValue: operation) else {
             throw Error.InvalidOperation
         }
         if self.rightNumber == nil {
@@ -76,6 +75,7 @@ public class CalculatorCommands {
     }
     
     public func clear() -> String {
+        repeatNumber = nil
         if rightNumber != nil {
             rightNumber = nil
             return leftNumber
@@ -90,6 +90,7 @@ public class CalculatorCommands {
     }
     
     public func allClear() -> String {
+        repeatNumber = nil
         self.leftNumber = CalculatorCommands.zero
         self.operation = nil
         self.rightNumber = nil
@@ -99,8 +100,13 @@ public class CalculatorCommands {
     public func equals() -> String {
         if rightNumber == nil {
             if operation != nil {
-                rightNumber = leftNumber
-                return performBinaryOperation()
+                if repeatNumber != nil {
+                    rightNumber = repeatNumber
+                } else {
+                    repeatNumber = leftNumber
+                    rightNumber = leftNumber
+                }
+                return performBinaryOperation(keepOperation: true)
             }
             return leftNumber
         }
@@ -110,8 +116,8 @@ public class CalculatorCommands {
 
     // MARK: - Private
     
-    private func performBinaryOperation() -> String {
-        guard let ln = Double(leftNumber), operation = operation, op = CalculatorProxyOperation(rawValue: operation), rightNumber = rightNumber, rn = Double(rightNumber) else {
+    private func performBinaryOperation(keepOperation keepOperation: Bool = false) -> String {
+        guard let ln = Double(leftNumber), operation = operation, op = Operation(rawValue: operation), rightNumber = rightNumber, rn = Double(rightNumber) else {
             abort()
         }
         let result = calculatorProxy.perform(ln, op.performer, rn)
@@ -120,7 +126,7 @@ public class CalculatorCommands {
         } else {
             self.leftNumber = String(result)
         }
-        self.operation = nil
+        self.operation = keepOperation ? self.operation : nil
         self.rightNumber = nil
         return leftNumber
     }
