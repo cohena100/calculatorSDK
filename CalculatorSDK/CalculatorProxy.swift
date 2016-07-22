@@ -12,6 +12,10 @@ public class CalculatorProxy {
     
     var sum: Double = 0
     
+    public init() {
+        
+    }
+    
 }
 
 extension CalculatorProxy: ICalculatorProxy {
