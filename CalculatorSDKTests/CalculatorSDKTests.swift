@@ -17,6 +17,7 @@ class CalculatorSDKTests: XCTestCase {
     static let one = "1"
     static let two = "2"
     static let five = "5"
+    static let fivePoint = "5."
     static let seven = "7"
     static let ten = "10"
     static let tenPoint5 = "10.5"
@@ -80,6 +81,12 @@ class CalculatorSDKTests: XCTestCase {
         commands.keyAction(.five)
         let result = commands.keyAction(.equals)
         XCTAssert(result.display == CalculatorSDKTests.zero)
+    }
+    
+    func test5Point() {
+        commands.keyAction(.five)
+        let result = commands.keyAction(.point)
+        XCTAssert(result.display == CalculatorSDKTests.fivePoint)
     }
     
 }
