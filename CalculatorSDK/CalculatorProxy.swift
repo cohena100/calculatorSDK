@@ -20,7 +20,7 @@ public class CalculatorProxy {
 
 extension CalculatorProxy: ICalculatorProxy {
     
-    public func perform(letfNumber: Double, _ operation: (Double, Double) -> Double, _ rightNumber: Double) -> Double {
+    public func perform(letfNumber: Double, _ operation: Operation, _ rightNumber: Double) -> Double {
         sum = operation(letfNumber, rightNumber)
         return sum
     }

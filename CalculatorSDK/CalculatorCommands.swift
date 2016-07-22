@@ -10,147 +10,207 @@ import Foundation
 
 public class CalculatorCommands {
     
-    public enum Error: ErrorType {
-        case InvalidOperation
-        case InvalidNumber
-    }
-    public enum Operation: String {
-        
+    public enum Action: String {
         case plus = "+"
         case minus = "-"
-        case multiply = "*"
+        case multiply = "x"
         case divide = "/"
-        
-        var performer: (Double, Double) -> Double {
-            get {
-                switch self {
-                case .plus:
-                    return { $0 + $1 }
-                case .minus:
-                    return { $0 - $1 }
-                case .multiply:
-                    return { $0 * $1 }
-                case .divide:
-                    return { $0 / $1 }
-                }
-            }
-        }
-        
+        case equals = "="
+        case point = "."
+        case zero = "0"
+        case one = "1"
+        case two = "2"
+        case three = "3"
+        case four = "4"
+        case five = "5"
+        case six = "6"
+        case seven = "7"
+        case eight = "8"
+        case nine = "9"
+        case c = "C"
+        case ac = "AC"
+        case plusMinus = "⏈"
+        case percent = "%"
     }
     
-    static let zero = "0"
     let calculatorProxy: ICalculatorProxy
-    var leftNumber: String = CalculatorCommands.zero
-    var operation: String?
-    var rightNumber: String?
-    var repeatNumber: String?
+    var leftNumber: Double = 0
+    var operation: Operation?
+    var rightNumber: Double?
+    var pointActionDone = false
     
     public init(calculatorProxy: ICalculatorProxy) {
         self.calculatorProxy = calculatorProxy
     }
  
-    public func numberChanged(number: String) throws -> String {
-        guard let _ = Double(number) else {
-            throw Error.InvalidNumber
+    public func keyAction(action: Action) -> (display: String, showAC: Bool) {
+        switch action {
+        case .plus:
+            return (display: toString(actionOnOperation({ $0 + $1 })), showAC: false)
+        case .minus:
+            return (display: toString(actionOnOperation({ $0 - $1 })), showAC: false)
+        case .multiply:
+            return (display: toString(actionOnOperation({ $0 * $1 })), showAC: false)
+        case .divide:
+            return (display: toString(actionOnOperation({ $0 / $1 })), showAC: false)
+        case .equals:
+            return (display: toString(equals()), showAC: false)
+        case .point:
+            return (display: toString(point()), showAC: false)
+        case .zero:
+            return (display: toString(actionOnNumber(0)), showAC: false)
+        case .one:
+            return (display: toString(actionOnNumber(1)), showAC: false)
+        case .two:
+            return (display: toString(actionOnNumber(2)), showAC: false)
+        case .three:
+            return (display: toString(actionOnNumber(3)), showAC: false)
+        case .four:
+            return (display: toString(actionOnNumber(4)), showAC: false)
+        case .five:
+            return (display: toString(actionOnNumber(5)), showAC: false)
+        case .six:
+            return (display: toString(actionOnNumber(6)), showAC: false)
+        case .seven:
+            return (display: toString(actionOnNumber(7)), showAC: false)
+        case .eight:
+            return (display: toString(actionOnNumber(8)), showAC: false)
+        case .nine:
+            return (display: toString(actionOnNumber(9)), showAC: false)
+        case .c:
+            return (display: toString(clear()), showAC: true)
+        case .ac:
+            return (display: toString(allClear()), showAC: true)
+        case .plusMinus:
+            return (display: toString(plusMinus()), showAC: false)
+        case .percent:
+            return (display: toString(percent()), showAC: false)
         }
-        repeatNumber = nil
-        if operation == nil {
-            leftNumber = number
-            return leftNumber
-        }
-        rightNumber = number
-        return rightNumber!
     }
     
-    public func perform(operation: String) throws -> String {
-        guard let _ = Operation(rawValue: operation) else {
-            throw Error.InvalidOperation
-        }
-        if self.rightNumber == nil {
-            self.operation = operation
-            return leftNumber
-        }
-        assert(self.operation != nil)
-        return performBinaryOperation()
-    }
-    
-    public func clear() -> String {
-        repeatNumber = nil
+    private func actionOnNumber(number: Double) -> Double {
         if rightNumber != nil {
-            rightNumber = nil
-            return leftNumber
-            
+            rightNumber = newValFrom(rightNumber!, with: number)
+            return rightNumber!
         }
         if operation != nil {
+            rightNumber = number
+            return rightNumber!
+        }
+        leftNumber = newValFrom(leftNumber, with: number)
+        return leftNumber
+    }
+    
+    private func actionOnOperation(operation: Operation) -> Double {
+        let result = equals()
+        self.operation = operation
+        return result
+    }
+    
+    private func equals() -> Double {
+        guard let _ = self.operation, _ = self.rightNumber else {
+            return leftNumber
+        }
+        let result = perform()
+        return result
+    }
+    
+    private func clear() -> Double {
+        pointActionDone = false
+        if rightNumber != nil {
+            rightNumber = nil
+        } else if operation != nil {
             operation = nil
-            return leftNumber
+        } else {
+            leftNumber = 0
         }
-        leftNumber = CalculatorCommands.zero
         return leftNumber
     }
     
-    public func allClear() -> String {
-        repeatNumber = nil
-        self.leftNumber = CalculatorCommands.zero
-        self.operation = nil
-        self.rightNumber = nil
-        return String(calculatorProxy.allClear())
+    private func allClear() -> Double {
+        pointActionDone = false
+        leftNumber = 0
+        operation = nil
+        rightNumber = nil
+        return calculatorProxy.allClear()
     }
     
-    public func equals() -> String {
-        if rightNumber == nil {
-            if operation != nil {
-                if repeatNumber != nil {
-                    rightNumber = repeatNumber
-                } else {
-                    repeatNumber = leftNumber
-                    rightNumber = leftNumber
-                }
-                return performBinaryOperation(keepOperation: true)
-            }
-            return leftNumber
-        }
-        assert(self.operation != nil)
-        return performBinaryOperation()
-    }
-
-    func percent() -> String {
+    private func percent() -> Double {
         if rightNumber != nil {
-            rightNumber = format(calculatorProxy.percent(Double(rightNumber!)!))
+            rightNumber = calculatorProxy.percent(rightNumber!)
             return rightNumber!
         }
-        leftNumber = format(calculatorProxy.percent(Double(leftNumber)!))
+        leftNumber = calculatorProxy.percent(leftNumber)
         return leftNumber
     }
     
-    func plusMinus() -> String {
+    private func plusMinus() -> Double {
         if rightNumber != nil {
-            rightNumber = format(calculatorProxy.plusMinus(Double(rightNumber!)!))
+            rightNumber = calculatorProxy.plusMinus(rightNumber!)
             return rightNumber!
         }
-        leftNumber = format(calculatorProxy.plusMinus(Double(leftNumber)!))
+        leftNumber = calculatorProxy.plusMinus(leftNumber)
         return leftNumber
     }
-
-    // MARK: - Private
     
-    private func performBinaryOperation(keepOperation keepOperation: Bool = false) -> String {
-        guard let ln = Double(leftNumber), operation = operation, op = Operation(rawValue: operation), rightNumber = rightNumber, rn = Double(rightNumber) else {
+    private func point() -> Double {
+        let checkNumber: Double
+        if rightNumber != nil {
+            checkNumber = rightNumber!
+        } else {
+            checkNumber = leftNumber
+        }
+        if !pointActionDone && isInt(checkNumber) {
+            pointActionDone = true
+        }
+        return checkNumber
+    }
+
+    private func perform() -> Double {
+        guard let operation = self.operation, rightNumber = self.rightNumber else {
             abort()
         }
-        let result = calculatorProxy.perform(ln, op.performer, rn)
-        self.leftNumber = format(result)
-        self.operation = keepOperation ? self.operation : nil
+        let result = calculatorProxy.perform(leftNumber, operation, rightNumber)
+        pointActionDone = false
+        leftNumber = result
+        self.operation = nil
         self.rightNumber = nil
         return leftNumber
     }
     
-    private func format(number: Double) -> String {
-        if number == Double(Int(number)) {
-            return String(Int(number))
+    private func newValFrom(from: Double, with: Double) -> Double {
+        var newVal: Double = 0
+        if pointActionDone {
+            newVal = from + with / 10
+            pointActionDone = false
         } else {
-            return String(number)
+            let afterPointCount = afterPoint(from)
+            if afterPointCount > 0 {
+                newVal = from + with * pow(10, -afterPointCount - 1)
+            } else {
+                newVal = 10 * from + with
+            }
         }
+        return newVal
+    }
+    
+    private func toString(number: Double) -> String {
+        let formatted = isInt(number) ? String(Int(number)) : String(number)
+        return pointActionDone ? formatted + "." : formatted
+    }
+    
+    private func isInt(number: Double) -> Bool {
+        return number == Double(Int(number))
+    }
+    
+    private func afterPoint(number: Double) -> Double {
+        var calcNumber = number
+        var count: Double = 0
+        while !isInt(calcNumber) {
+            count += 1
+            calcNumber *= 10
+        }
+        return count
     }
     
 }
