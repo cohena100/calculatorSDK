@@ -33,13 +33,14 @@ public class CalculatorCommands {
         case percent = "%"
     }
     
+    public var display = "0"
+    public var acOrC = Action.c
+
     let calculatorProxy: ICalculatorProxy
     var leftNumber: Double = 0
     var operation: Operation?
     var rightNumber: Double?
     var pointActionDone = false
-    var display = "0"
-    var showAC = false
     
     public init(calculatorProxy: ICalculatorProxy) {
         self.calculatorProxy = calculatorProxy
@@ -49,64 +50,64 @@ public class CalculatorCommands {
         switch action {
         case .plus:
             display = toString(actionOnOperation({ $0 + $1 }))
-            showAC = false
+            acOrC = Action.c
         case .minus:
             display = toString(actionOnOperation({ $0 - $1 }))
-            showAC = false
+            acOrC = Action.c
         case .multiply:
             display = toString(actionOnOperation({ $0 * $1 }))
-            showAC = false
+            acOrC = Action.c
         case .divide:
             display = toString(actionOnOperation({ $0 / $1 }))
-            showAC = false
+            acOrC = Action.c
         case .equals:
             display = toString(equals())
-            showAC = false
+            acOrC = Action.c
         case .point:
             display = toString(point())
-            showAC = false
+            acOrC = Action.c
         case .zero:
             display = toString(actionOnNumber(0))
-            showAC = false
+            acOrC = Action.c
         case .one:
             display = toString(actionOnNumber(1))
-            showAC = false
+            acOrC = Action.c
         case .two:
             display = toString(actionOnNumber(2))
-            showAC = false
+            acOrC = Action.c
         case .three:
             display = toString(actionOnNumber(3))
-            showAC = false
+            acOrC = Action.c
         case .four:
             display = toString(actionOnNumber(4))
-            showAC = false
+            acOrC = Action.c
         case .five:
             display = toString(actionOnNumber(5))
-            showAC = false
+            acOrC = Action.c
         case .six:
             display = toString(actionOnNumber(6))
-            showAC = false
+            acOrC = Action.c
         case .seven:
             display = toString(actionOnNumber(7))
-            showAC = false
+            acOrC = Action.c
         case .eight:
             display = toString(actionOnNumber(8))
-            showAC = false
+            acOrC = Action.c
         case .nine:
             display = toString(actionOnNumber(9))
-            showAC = false
+            acOrC = Action.c
         case .c:
             display = toString(clear())
-            showAC = true
+            acOrC = Action.ac
         case .ac:
             display = toString(allClear())
-            showAC = true
+            acOrC = Action.ac
         case .plusMinus:
             display = toString(plusMinus())
-            showAC = false
+            acOrC = Action.c
         case .percent:
             display = toString(percent())
-            showAC = false
+            acOrC = Action.c
         }
     }
     
