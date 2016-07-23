@@ -44,14 +44,14 @@ class CalculatorSDKTests: XCTestCase {
     }
     
     func test5Plus5equals10() {
-        var result = commands.keyAction(.five)
-        XCTAssert(result.display == CalculatorSDKTests.five)
-        result = commands.keyAction(.plus)
-        XCTAssert(result.display == CalculatorSDKTests.five)
-        result = commands.keyAction(.two)
-        XCTAssert(result.display == CalculatorSDKTests.two)
-        result = commands.keyAction(.equals)
-        XCTAssert(result.display == CalculatorSDKTests.seven)
+        commands.keyAction(.five)
+        XCTAssert(commands.display == CalculatorSDKTests.five)
+        commands.keyAction(.plus)
+        XCTAssert(commands.display == CalculatorSDKTests.five)
+        commands.keyAction(.two)
+        XCTAssert(commands.display == CalculatorSDKTests.two)
+        commands.keyAction(.equals)
+        XCTAssert(commands.display == CalculatorSDKTests.seven)
     }
 
     func test5Plus5Plus5Equals15() {
@@ -60,8 +60,8 @@ class CalculatorSDKTests: XCTestCase {
         commands.keyAction(.five)
         commands.keyAction(.plus)
         commands.keyAction(.five)
-        let result = commands.keyAction(.equals)
-        XCTAssert(result.display == CalculatorSDKTests.fifteen)
+        commands.keyAction(.equals)
+        XCTAssert(commands.display == CalculatorSDKTests.fifteen)
     }
 
     func test5Point5Plus5Equals10Point5() {
@@ -70,8 +70,8 @@ class CalculatorSDKTests: XCTestCase {
         commands.keyAction(.five)
         commands.keyAction(.plus)
         commands.keyAction(.five)
-        let result = commands.keyAction(.equals)
-        XCTAssert(result.display == CalculatorSDKTests.tenPoint5)
+        commands.keyAction(.equals)
+        XCTAssert(commands.display == CalculatorSDKTests.tenPoint5)
     }
     
     func testMinus5Plus5Equals0() {
@@ -79,14 +79,14 @@ class CalculatorSDKTests: XCTestCase {
         commands.keyAction(.plusMinus)
         commands.keyAction(.plus)
         commands.keyAction(.five)
-        let result = commands.keyAction(.equals)
-        XCTAssert(result.display == CalculatorSDKTests.zero)
+        commands.keyAction(.equals)
+        XCTAssert(commands.display == CalculatorSDKTests.zero)
     }
     
     func test5Point() {
         commands.keyAction(.five)
-        let result = commands.keyAction(.point)
-        XCTAssert(result.display == CalculatorSDKTests.fivePoint)
+        commands.keyAction(.point)
+        XCTAssert(commands.display == CalculatorSDKTests.fivePoint)
     }
     
 }

@@ -38,53 +38,75 @@ public class CalculatorCommands {
     var operation: Operation?
     var rightNumber: Double?
     var pointActionDone = false
+    var display = "0"
+    var showAC = false
     
     public init(calculatorProxy: ICalculatorProxy) {
         self.calculatorProxy = calculatorProxy
     }
  
-    public func keyAction(action: Action) -> (display: String, showAC: Bool) {
+    public func keyAction(action: Action) {
         switch action {
         case .plus:
-            return (display: toString(actionOnOperation({ $0 + $1 })), showAC: false)
+            display = toString(actionOnOperation({ $0 + $1 }))
+            showAC = false
         case .minus:
-            return (display: toString(actionOnOperation({ $0 - $1 })), showAC: false)
+            display = toString(actionOnOperation({ $0 - $1 }))
+            showAC = false
         case .multiply:
-            return (display: toString(actionOnOperation({ $0 * $1 })), showAC: false)
+            display = toString(actionOnOperation({ $0 * $1 }))
+            showAC = false
         case .divide:
-            return (display: toString(actionOnOperation({ $0 / $1 })), showAC: false)
+            display = toString(actionOnOperation({ $0 / $1 }))
+            showAC = false
         case .equals:
-            return (display: toString(equals()), showAC: false)
+            display = toString(equals())
+            showAC = false
         case .point:
-            return (display: toString(point()), showAC: false)
+            display = toString(point())
+            showAC = false
         case .zero:
-            return (display: toString(actionOnNumber(0)), showAC: false)
+            display = toString(actionOnNumber(0))
+            showAC = false
         case .one:
-            return (display: toString(actionOnNumber(1)), showAC: false)
+            display = toString(actionOnNumber(1))
+            showAC = false
         case .two:
-            return (display: toString(actionOnNumber(2)), showAC: false)
+            display = toString(actionOnNumber(2))
+            showAC = false
         case .three:
-            return (display: toString(actionOnNumber(3)), showAC: false)
+            display = toString(actionOnNumber(3))
+            showAC = false
         case .four:
-            return (display: toString(actionOnNumber(4)), showAC: false)
+            display = toString(actionOnNumber(4))
+            showAC = false
         case .five:
-            return (display: toString(actionOnNumber(5)), showAC: false)
+            display = toString(actionOnNumber(5))
+            showAC = false
         case .six:
-            return (display: toString(actionOnNumber(6)), showAC: false)
+            display = toString(actionOnNumber(6))
+            showAC = false
         case .seven:
-            return (display: toString(actionOnNumber(7)), showAC: false)
+            display = toString(actionOnNumber(7))
+            showAC = false
         case .eight:
-            return (display: toString(actionOnNumber(8)), showAC: false)
+            display = toString(actionOnNumber(8))
+            showAC = false
         case .nine:
-            return (display: toString(actionOnNumber(9)), showAC: false)
+            display = toString(actionOnNumber(9))
+            showAC = false
         case .c:
-            return (display: toString(clear()), showAC: true)
+            display = toString(clear())
+            showAC = true
         case .ac:
-            return (display: toString(allClear()), showAC: true)
+            display = toString(allClear())
+            showAC = true
         case .plusMinus:
-            return (display: toString(plusMinus()), showAC: false)
+            display = toString(plusMinus())
+            showAC = false
         case .percent:
-            return (display: toString(percent()), showAC: false)
+            display = toString(percent())
+            showAC = false
         }
     }
     
